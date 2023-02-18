@@ -1,24 +1,24 @@
 #configuring frontend web server
+source common.sh
+print_head "Installing nginx server"
 
-code_dir=$(pwd)
-echo -e "\e[31mInstalling nginx server \e[0m"
+sudo yum install nginx -y &>>${log_file}
 
-sudo yum install nginx -y
+print_head "Removing the default html content"
 
-echo -e "\e[31mRemoving the default html content \e[0m"
+rm -rf /usr/share/nginx/html/* &>>${log_file}
 
-rm -rf /usr/share/nginx/html/*
+print_head "Downloading and extracting the frontend content"
 
-echo -e "\e[31mDownloading and extracting the frontend content \e[0m"
+curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend.zip &>>${log_file}
 
-curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend.zip
-
+print_head "nginx config for roboshop"
 cd /usr/share/nginx/html
-unzip /tmp/frontend.zip
+unzip /tmp/frontend.zip &>>${log_file} &>>${log_file}
 
-cp ${code_dir}/configs/nginx-roboshop.conf /etc/nginx/default.d/roboshop.conf
+cp ${code_dir}/configs/nginx-roboshop.conf /etc/nginx/default.d/roboshop.conf &>>${log_file}
 
-echo -e "\e[31mEnable and start the nginx server \e[0m"
+print_head "Enable and start the nginx server"
 
-systemctl enable nginx
-systemctl start nginx
+systemctl enable nginx &>>${log_file}
+systemctl start nginx &>>${log_file}
