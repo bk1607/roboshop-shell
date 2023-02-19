@@ -10,4 +10,5 @@ print_head "enable and start the mongodb service"
 systemctl enable mongod &>>${log_file}
 systemctl start mongod &>>${log_file}
 
-#print_head "edit the ip address to 0.0.0.0"
+print_head "edit the ip address to 0.0.0.0"
+sed -i 's/127.0.0.1/0.0.0.0'
