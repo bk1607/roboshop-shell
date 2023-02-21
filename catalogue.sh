@@ -22,9 +22,7 @@ fi
 error_check $?
 
 print_head "Downloading catalogue files"
-if [ ! -f /tmp/catalogue.zip ];then
-  curl -L -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue.zip &>>"${log_file}"
-fi
+curl -L -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue.zip &>>"${log_file}"
 error_check $?
 
 print_head "change to app directory"
@@ -32,7 +30,7 @@ cd /app
 error_check $?
 
 print_head "unzipping the file"
-unzip /tmp/catalogue.zip
+unzip /tmp/catalogue.zip &>>${log_file}
 error_check $?
 
 print_head "install nodejs dependencies"
