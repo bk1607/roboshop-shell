@@ -18,6 +18,7 @@ error_check $?
 
 print_head "Enable and restart redis service"
 systemctl enable redis &>>${log_file}
+error_check $?
 systemctl restart redis &>>${log_file}
 error_check &?
 
