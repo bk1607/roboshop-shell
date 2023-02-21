@@ -30,7 +30,7 @@ cd /app
 error_check $?
 
 print_head "unzipping the file"
-unzip /tmp/catalogue.zip &>>${log_file}
+unzip /tmp/catalogue.zip
 error_check $?
 
 print_head "install nodejs dependencies"
