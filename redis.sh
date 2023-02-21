@@ -13,7 +13,7 @@ yum install redis -y &>>${log_file}
 error_check $?
 
 print_head "Changing IP address in config file"
-sed -i "/s/127.0.0.1/0.0.0.0" /etc/redis.conf &>>${log_file}
+sed -i 's/127.0.0.1/0.0.0.0/' /etc/redis.conf &>>${log_file}
 error_check $?
 
 print_head "Enable and restart redis service"
