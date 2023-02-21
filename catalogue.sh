@@ -34,7 +34,7 @@ unzip /tmp/catalogue.zip
 error_check $?
 
 print_head "install nodejs dependencies"
-npm install
+npm install &>>$"{log_file}"
 error_check $?
 
 print_head "copying catalogue service file"
