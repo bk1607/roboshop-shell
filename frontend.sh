@@ -2,7 +2,7 @@
 source common.sh
 print_head "Installing nginx server"
 
-sudo yum install nginx -y &>>${log_file}
+yum install nginx -y &>>${log_file}
 
 print_head "Removing the default html content"
 
@@ -21,4 +21,4 @@ cp ${code_dir}/configs/nginx-roboshop.conf /etc/nginx/default.d/roboshop.conf &>
 print_head "Enable and start the nginx server"
 
 systemctl enable nginx &>>${log_file}
-systemctl start nginx &>>${log_file}
+systemctl restart nginx &>>${log_file}
