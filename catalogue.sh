@@ -22,7 +22,8 @@ fi
 error_check $?
 
 print_head "Downloading catalogue files"
-curl -L -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue.zip &>>"${log_file}"
+if [ ! -f /tmp/catalogue.zip ];then
+  curl -L -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue.zip &>>"${log_file}"
 error_check $?
 
 print_head "change to app directory"
