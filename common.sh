@@ -41,7 +41,7 @@ node_js(){
   error_check $?
 
   print_head "Downloading catalogue files"
-  curl -L -o /tmp/"${component}.zip" https://roboshop-artifacts.s3.amazonaws.com/"${component}.zip" &>>"${log_file}"
+  curl -L -o /tmp/"$1.zip" https://roboshop-artifacts.s3.amazonaws.com/"$1.zip" &>>"${log_file}"
   error_check $?
 
   print_head "change to app directory"
@@ -49,10 +49,27 @@ node_js(){
   error_check $?
 
   print_head "unzipping the file"
-  unzip /tmp/"${component}.zip" &>>${log_file}
+  unzip /tmp/"$1.zip" &>>${log_file}
   error_check $?
 
   print_head "install nodejs dependencies"
   npm install &>>$"{log_file}"
 
+  print_head "copying catalogue service file"
+  cp "${code_dir}"/configs/"$1.service" /etc/systemd/system/"$1.service" &>>"${log_file}"
+  error_check $?
+
+}
+mongodb() {
+  print_head "copying mongodb repo file "
+  cp "${code_dir}"/configs/mongodb.repo /etc/yum.repos.d/mongo.repo &>>"${log_file}"
+  error_check $?
+
+  print_head "installing mongodb"
+  yum install mongodb-org-shell -y &>>"${log_file}"
+  error_check $?
+
+  print_head "loading the schema"
+  mongo --host mongodb.devops2023.online </app/schema/"$1".js &>>"${log_file}"
+  error_check $?
 }
