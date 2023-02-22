@@ -76,7 +76,7 @@ mongodb() {
 }
 restart(){
   print_head "enabled and the restarted the service"
-  systemctl daemon reload
+  systemctl daemon-reload
   systemctl enable $1 &>>${log_file} &>>${log_file}
   systemctl restart $1 &>>${log_file} &>>${log_file}
   error_check $?
