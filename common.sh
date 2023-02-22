@@ -72,4 +72,10 @@ mongodb() {
   print_head "loading the schema"
   mongo --host mongodb.devops2023.online </app/schema/"$1".js &>>"${log_file}"
   error_check $?
+
+  print_head "daemon-reload and restart the catalogue service "
+  systemctl daemon-reload
+  systemctl enable $1
+  systemctl restart $1
+
 }
