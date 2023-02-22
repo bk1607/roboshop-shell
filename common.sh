@@ -73,9 +73,11 @@ mongodb() {
   mongo --host mongodb.devops2023.online </app/schema/"$1".js &>>"${log_file}"
   error_check $?
 
-  print_head "daemon-reload and restart the catalogue service "
-  systemctl daemon-reload
-  systemctl enable $1 &>>${log_file}
-  systemctl restart $1 &>>${log_file}
-
+}
+restart(){
+  print_head "enabled and the restarted the service"
+  systemctl daemon reload
+  systemctl enable $1 &>>${log_file} &>>${log_file}
+  systemctl restart $1 &>>${log_file} &>>${log_file}
+  error_check $?
 }
