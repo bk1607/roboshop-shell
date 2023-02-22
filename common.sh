@@ -75,7 +75,7 @@ mongodb() {
 
   print_head "daemon-reload and restart the catalogue service "
   systemctl daemon-reload
-  systemctl enable $1
-  systemctl restart $1
+  systemctl enable $1 &>>${log_file}
+  systemctl restart $1 &>>${log_file}
 
 }
