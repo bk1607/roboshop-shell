@@ -40,7 +40,7 @@ node_js(){
   fi
   error_check $?
 
-  print_head "Downloading catalogue files"
+  print_head "Downloading $1 files"
   curl -L -o /tmp/"$1.zip" https://roboshop-artifacts.s3.amazonaws.com/"$1.zip" &>>"${log_file}"
   error_check $?
 
