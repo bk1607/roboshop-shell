@@ -16,15 +16,7 @@ error_check(){
   fi
 }
 
-node_js(){
-  print_head "setting up nodejs repos"
-  curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>"${log_file}"
-  error_check $?
-
-  print_head "installing nodejs"
-  yum install nodejs -y &>>"${log_file}"
-  error_check $?
-
+app_prereq_setup() {
   print_head "add application user"
   id roboshop &>>"${log_file}"
   if [ $? -ne 0 ];then
@@ -40,7 +32,7 @@ node_js(){
   fi
   error_check $?
 
-  print_head "Downloading $1 files"
+  print_head "Downloading $1 content"
   curl -L -o /tmp/"$1.zip" https://roboshop-artifacts.s3.amazonaws.com/"$1.zip" &>>"${log_file}"
   error_check $?
 
@@ -48,16 +40,36 @@ node_js(){
   cd /app
   error_check $?
 
-  print_head "unzipping the file"
+  print_head "extracting app content"
   unzip /tmp/"$1.zip" &>>${log_file}
   error_check $?
+
+}
+
+systemd_setup(){
+  print_head "copying systemd service file"
+  cp "${code_dir}"/configs/"$1.service" /etc/systemd/system/"$1.service" &>>"${log_file}"
+  error_check $?
+
+  print_head "reload systemd"
+  systemctl daemon-reload
+  error_check $?
+}
+node_js(){
+  print_head "setting up nodejs repos"
+  curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>"${log_file}"
+  error_check $?
+
+  print_head "installing nodejs"
+  yum install nodejs -y &>>"${log_file}"
+  error_check $?
+
+  app_prereq_setup
 
   print_head "install nodejs dependencies"
   npm install &>>$"{log_file}"
 
-  print_head "copying catalogue service file"
-  cp "${code_dir}"/configs/"$1.service" /etc/systemd/system/"$1.service" &>>"${log_file}"
-  error_check $?
+  systemd_setup
 
 }
 mongodb() {
@@ -75,9 +87,18 @@ mongodb() {
 
 }
 restart(){
-  print_head "enabled and the restarted the service"
-  systemctl daemon-reload
-  systemctl enable $1 &>>${log_file} &>>${log_file}
+  systemctl enable $1 &>>${log_file}
+  error_check $?
+
   systemctl restart $1 &>>${log_file} &>>${log_file}
   error_check $?
+}
+schema(){
+  password = $1
+  if [ -z password ];then
+    echo -e "\e[35mPlease enter the password[0m"
+    exit 1
+  else
+    mysql -h mysql.devops2023.online -uroot -p"${password}" < /app/schema/shipping.sql
+  fi
 }
