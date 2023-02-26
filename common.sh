@@ -48,7 +48,7 @@ systemd_setup(){
 
 
 
-  sed -i "s/ROBOSHOP_USER_PASSWORD/${roboshop_password}" /etc/systemd/system/"${component}".service &>>"${log_file}"
+  sed -i "s/ROBOSHOP_USER_PASSWORD/${roboshop_password}/" /etc/systemd/system/"${component}".service &>>"${log_file}"
 
   print_head "Daemon reloading"
   systemctl daemon-reload &>>"${log_file}"
@@ -135,6 +135,7 @@ python(){
   app_setup
 
   print_head "installing dependencies"
+  cd /app
   pip3.6 install -r requirements.txt &>>"${log_file}"
   error_check $?
 
