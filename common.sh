@@ -52,8 +52,8 @@ systemd_setup(){
   sed -i "s/ROBOSHOP_USER_PASSWORD/${roboshop_password}" /etc/systemd/system/"${component}".service &>>"${log_file}"
 
   print_head "Enable and start the service"
-  systemctl enable catalogue &>>"${log_file}"
-  systemctl start catalogue &>>"${log_file}"
+  systemctl enable "${component}" &>>"${log_file}"
+  systemctl start "${component}" &>>"${log_file}"
   error_check $?
 
 }
