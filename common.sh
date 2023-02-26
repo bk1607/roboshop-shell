@@ -46,11 +46,13 @@ systemd_setup(){
   cp "${code_dir}"/configs/"${component}".service /etc/systemd/system/"${component}".service &>>"${log_file}"
   error_check $?
 
+
+
+  sed -i "s/ROBOSHOP_USER_PASSWORD/${roboshop_password}" /etc/systemd/system/"${component}".service &>>"${log_file}"
+
   print_head "Daemon reloading"
   systemctl daemon-reload &>>"${log_file}"
   error_check $?
-
-  sed -i "s/ROBOSHOP_USER_PASSWORD/${roboshop_password}" /etc/systemd/system/"${component}".service &>>"${log_file}"
 
   print_head "Enable and start the service"
   systemctl enable "${component}" &>>"${log_file}"
