@@ -8,7 +8,7 @@ yum install mongodb-org -y &>>"${log_file}"
 error_check $?
 
 print_head "Edit the port address "
-sed -i "s/127.0.0.1/0.0.0.0" /etc/mongod.conf &>>"${log_file}"
+sed -i "s/127.0.0.1/0.0.0.0/" /etc/mongod.conf &>>"${log_file}"
 error_check $?
 
 print_head "Enable and restart the service"
