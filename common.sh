@@ -60,7 +60,7 @@ systemd_setup(){
 }
 
 schema_setup(){
-  if [ schema_type=='mongo' ];then
+  if [ "${schema_type}" == 'mongo' ];then
     print_head "copying mongo repo files"
     cp "${code_dir}"/configs/mongodb.repo /etc/yum.repos.d/mongodb.repo &>>"${log_file}"
     error_check $?
@@ -72,6 +72,7 @@ schema_setup(){
     print_head "Loading schema"
     mongo --host mongodb.devops2023.online </app/schema/"${component}".js
     error_check $?
+  fi
 }
 
 nodejs(){
