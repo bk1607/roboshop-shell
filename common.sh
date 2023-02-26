@@ -27,6 +27,7 @@ app_setup(){
   if [ $? -ne 0 ];then
     rm -rf /app/* &>>"${log_file}"
   fi
+  error_check $?
 
   print_head "Downloading app content"
   curl -L -o /tmp/"${component}".zip https://roboshop-artifacts.s3.amazonaws.com/"${component}".zip &>>"${log_file}"
@@ -108,13 +109,13 @@ nodejs(){
 
 java(){
   print_head "Installing maven"
-  yum install maven -y
+  yum install maven -y &>>"${log_file}"
   error_check $?
 
   app_setup
 
   print_head "Downloading dependencies"
-  mvn clean package
+  mvn clean package &>>"${log_file}"
   mv target/"${component}"-1.0.jar "${component}".jar &>>"${log_file}"
   error_check $?
 
