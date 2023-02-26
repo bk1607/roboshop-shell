@@ -1,24 +1,26 @@
-#configuring frontend web server
 source common.sh
-print_head "Installing nginx server"
+print_head "installing nginx"
+yum install nginx -y &>>"${log_file}"
+error_check $?
 
-yum install nginx -y &>>${log_file}
+print_head "Removing default content"
+rm -rf /usr/share/nginx/html/* &>>"${log_file}"
+error_check $?
 
-print_head "Removing the default html content"
+print_head "Downloading frontend content"
+curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend.zip &>>"${log_file}"
+error_check $?
 
-rm -rf /usr/share/nginx/html/* &>>${log_file}
-
-print_head "Downloading and extracting the frontend content"
-
-curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend.zip &>>${log_file}
-
-print_head "nginx config for roboshop"
+print_head "extracting frontend content"
 cd /usr/share/nginx/html
-unzip /tmp/frontend.zip &>>${log_file} &>>${log_file}
+unzip /tmp/frontend.zip &>>"${log_file}"
+error_check $?
 
-cp ${code_dir}/configs/nginx-roboshop.conf /etc/nginx/default.d/roboshop.conf &>>${log_file}
+print_head "copying reverse proxy files"
+cp "${code_dir}"/configs/nginx-roboshop.conf /etc/nginx/default.d/roboshop.conf &>>"${log_file}"
+error_check $?
 
-print_head "Enable and start the nginx server"
-
-systemctl enable nginx &>>${log_file}
-systemctl restart nginx &>>${log_file}
+print_head "Enabling and restarting the service"
+systemctl enable nginx &>>"${log_file}"
+systemctl start nginx &>>"${log_file}"
+error_check $?
