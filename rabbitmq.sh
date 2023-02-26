@@ -1,7 +1,7 @@
 source common.sh
 rabbitmq_password=$1
 if [ -z "${rabbitmq_password}" ];then
-  echo-e "\e[31mMissing Password argument\e[0m"
+  echo -e "\e[31mMissing Password argument\e[0m"
   exit 1
 fi
 
