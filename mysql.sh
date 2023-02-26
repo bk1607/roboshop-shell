@@ -28,7 +28,10 @@ mysql_secure_installation --set-root-pass "${mysql_root_password}" &>>"${log_fil
 error_check $?
 
 print_head "checking password"
-mysql -uroot -p"${mysql_root_password}"
+echo show databases | mysql -uroot -p${mysql_root_password} &>>"${log_file}"
+if [ $? -ne 0 ];then
+  mysql_secure_installation --set-root-pass "${mysql_root_password}" &>>"${log_file}"
+fi
 error_check $?
 
 
