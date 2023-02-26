@@ -2,7 +2,7 @@ print_head(){
   echo -e "\e[35m$1\e[0m"
 }
 
-log_file=$(/tmp/roboshop.org)
+log_file=$(touch /tmp/roboshop.org)
 
 code_dir=$(pwd)
 
