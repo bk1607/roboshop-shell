@@ -56,7 +56,7 @@ systemd_setup(){
 
   print_head "Enable and start the service"
   systemctl enable "${component}" &>>"${log_file}"
-  systemctl start "${component}" &>>"${log_file}"
+  systemctl restart "${component}" &>>"${log_file}"
   error_check $?
 
 }
