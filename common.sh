@@ -70,7 +70,7 @@ schema_setup(){
     error_check $?
 
     print_head "Loading schema"
-    mongo --host mongodb.devops2023.online </app/schema/"${component}".js
+    mongo --host mongodb.devops2023.online </app/schema/"${component}".js &>>"${log_file}"
     error_check $?
   fi
 }
