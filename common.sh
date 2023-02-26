@@ -37,9 +37,6 @@ app_setup(){
   unzip /tmp/"${component}".zip &>>"${log_file}"
   error_check $?
 
-  print_head "Downloading Dependencies"
-  npm install &>>"${log_file}"
-  error_check $?
 
 }
 
@@ -51,6 +48,8 @@ systemd_setup(){
   print_head "Daemon reloading"
   systemctl daemon-reload &>>"${log_file}"
   error_check $?
+
+  sed -i "s/ROBOSHOP_USER_PASSWORD/${roboshop_password}" /etc/systemd/system/"${component}".service &>>"${log_file}"
 
   print_head "Enable and start the service"
   systemctl enable catalogue &>>"${log_file}"
@@ -72,6 +71,16 @@ schema_setup(){
     print_head "Loading schema"
     mongo --host mongodb.devops2023.online </app/schema/"${component}".js &>>"${log_file}"
     error_check $?
+  elif [ "${schema_type}" == 'mysql' ];then
+    print_head "Installing mysql"
+    yum install mysql -y &>>"${log_file}"
+    error_check $?
+
+    print_head "Loading schema"
+    mysql -h mysql.devops2023.online -uroot -p"${mysql_root_password}" < /app/schema/"${component}".sql &>>"${log_file}"
+    error_check $?
+
+
   fi
 }
 
@@ -86,9 +95,62 @@ nodejs(){
 
   app_setup
 
+  print_head "Downloading Dependencies"
+  npm install &>>"${log_file}"
+  error_check $?
+
   schema_setup
 
   systemd_setup
 
 
+}
+
+java(){
+  print_head "Installing maven"
+  yum install maven -y
+  error_check $?
+
+  app_setup
+
+  print_head "Downloading dependencies"
+  mvn clean package
+  mv target/"${component}"-1.0.jar "${component}".jar &>>"${log_file}"
+  error_check $?
+
+  schema_setup
+
+  systemd_setup
+
+}
+
+python(){
+  print_head "Installing python"
+  yum install python36 gcc python3-devel -y &>>"${log_file}"
+  error_check $?
+
+  app_setup
+
+  print_head "installing dependencies"
+  pip3.6 install -r requirements.txt &>>"${log_file}"
+  error_check $?
+
+  systemd_setup
+
+}
+
+golang(){
+  print_head "Installing goang"
+  yum install golang -y &>>"${log_file}"
+  error_check $?
+
+  app_setup
+
+  print_head "Installing Dependencies"
+  go mod init dispatch &>>"${log_file}"
+  go get &>>"${log_file}"
+  go build &>>"${log_file}"
+  error_check $?
+
+  systemd_setup
 }

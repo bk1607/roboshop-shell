@@ -1,18 +1,10 @@
 source common.sh
-print_head "installing maven"
-yum install maven -y &>>"${log_file}"
-error_check $?
+mysql_root_password=$1
+if [ -z "${mysql_root_password}" ];then
+  echo -e "\e[31mMissing password argument\e[0m"
+  exit 1
+fi
 
-app_preq_setup shipping
-
-print_head "download dependencies"
-mvn clean package &>>"${log_file}"
-mv target/shipping-1.0.jar shipping.jar &>>"${log_file}"
-error_check $?
-
-systemd_setup shipping
-
-print_head "installing mysql"
-yum install mysql -y &>>"${log_file}"
-error_check $?
-
+component='shipping'
+schema_type='mysql'
+java
