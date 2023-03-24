@@ -72,7 +72,7 @@ schema_setup(){
     error_check $?
 
     print_head "Loading schema"
-    mongo --host mongodb.devops2023.online </app/schema/"${component}".js &>>"${log_file}"
+    mongo --host mongodb-dev.devops2023.online </app/schema/"${component}".js &>>"${log_file}"
     error_check $?
   elif [ "${schema_type}" == 'mysql' ];then
     print_head "Installing mysql"
@@ -80,7 +80,7 @@ schema_setup(){
     error_check $?
 
     print_head "Loading schema"
-    mysql -h mysql.devops2023.online -uroot -p"${mysql_root_password}" < /app/schema/"${component}".sql &>>"${log_file}"
+    mysql -h mysql-dev.devops2023.online -uroot -p"${mysql_root_password}" < /app/schema/"${component}".sql &>>"${log_file}"
     error_check $?
 
 
